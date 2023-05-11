@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { GetServerSideProps } from "next";
 import { NewsArticle, NewsResponse } from "@/models/NewsArticles";
+import NewsArticleEntry from "@/components/NewsAricleEntry";
 
 interface BreakingNewsPageProps{
   newsArticles:NewsArticle[],
@@ -25,7 +26,7 @@ export default function BreakingNewsPage({newsArticles}:BreakingNewsPageProps) {
       </Head>
       <main>
         <h1>Breaking News</h1>
-        {JSON.stringify(newsArticles)}
+        <NewsArticleEntry article={newsArticles[0]}/>
       </main>
     </>
   );
