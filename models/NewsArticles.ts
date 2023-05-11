@@ -7,3 +7,7 @@ export interface NewsArticle{
     publishedAt:string,
     content:string,
 }
+
+export interface NewsResponse{
+    articles : NewsArticle[]
+}
