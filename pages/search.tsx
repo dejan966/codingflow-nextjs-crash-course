@@ -1,6 +1,8 @@
+import NewsArticlesGrid from "@/components/NewsArticlesGrid";
 import { NewsArticle } from "@/models/NewsArticles";
+import Head from "next/head";
 import { FormEvent, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Alert, Button, Form, Spinner } from "react-bootstrap";
 
 const SearchNewsPage = () => {
   const [searchResults, setSearchResults] = useState<NewsArticle[] | null>(
@@ -16,30 +18,62 @@ const SearchNewsPage = () => {
     const searchQuery = formData.get("searchQuery")?.toString().trim();
 
     if (searchQuery) {
-      alert(searchQuery);
+      try {
+        setSearchResults(null);
+        setSearchResultsLoadingIsError(false);
+        setSearchResultsLoading(true);
+        const response = await fetch("/api/search-news?q=" + searchQuery);
+        const articles: NewsArticle[] = await response.json();
+        setSearchResults(articles);
+      } catch (error) {
+        console.error(error);
+        setSearchResultsLoadingIsError(true);
+      } finally {
+        setSearchResultsLoading(false);
+      }
     }
   }
 
   return (
-    <main>
-      <h1>Search News</h1>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="search-input">
-          <Form.Label>Search query</Form.Label>
-          <Form.Control
-            name="searchQuery"
-            placeholder="e.g. politics, sports,..."
-          />
-          <Button
-            type="submit"
-            className="mb-3"
-            disabled={searchResultsLoading}
-          >
-            Search
-          </Button>
-        </Form.Group>
-      </Form>
-    </main>
+    <>
+      <Head>
+        <title key="title">Search News - Next JS News App</title>
+      </Head>
+      <main>
+        <h1>Search News</h1>
+        <Alert>
+          This page uses <strong>getServerSideProps</strong> to fetch data
+          server-side on every request. This alows search engines to crawl the
+          page content and <strong>improves SEO</strong>.
+        </Alert>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="search-input">
+            <Form.Label>Search query</Form.Label>
+            <Form.Control
+              name="searchQuery"
+              placeholder="e.g. politics, sports,..."
+            />
+            <Button
+              type="submit"
+              className="mb-3"
+              disabled={searchResultsLoading}
+            >
+              Search
+            </Button>
+          </Form.Group>
+        </Form>
+        <div className="d-flex flex-column align-items-center">
+          {searchResultsLoading && <Spinner animation="border" />}
+          {searchResultsLoadingIsError && (
+            <p>Somethign went wrong. Please try again.</p>
+          )}
+          {searchResults?.length === 0 && (
+            <p>Nothing found. Try a different query.</p>
+          )}
+          {searchResults && <NewsArticlesGrid articles={searchResults} />}
+        </div>
+      </main>
+    </>
   );
 };
 
