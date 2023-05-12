@@ -16,7 +16,6 @@ const NewsArticleEntry = ({
   return (
     <a href={url}>
       <Card className="h-100">
-        <Card.Img variant="top" src={validImageUrl} />
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>{description}</Card.Text>
