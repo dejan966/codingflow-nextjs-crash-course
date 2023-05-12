@@ -1,6 +1,9 @@
 import NewsArticlesGrid from "@/components/NewsArticlesGrid";
 import { NewsArticle, NewsResponse } from "@/models/NewsArticles";
 import { GetStaticPaths, GetStaticProps } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { Alert } from "react-bootstrap";
 
 interface CategoryNewsPageProps {
   newsArticles: NewsArticle[];
@@ -22,7 +25,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }));
   return {
     paths,
-    fallback: false, // if you enter a slug thats not one of the "correct" it will show error 404 page
+    fallback: false,
   };
 };
 
@@ -36,13 +39,27 @@ export const getStaticProps: GetStaticProps<CategoryNewsPageProps> = async ({
   const newsResponse: NewsResponse = await response.json();
   return {
     props: { newsArticles: newsResponse.articles },
+    revalidate: 5 * 60, // fetches data every 5 minutes in production
   };
 };
 
 const CategoryNewsPage = ({ newsArticles }: CategoryNewsPageProps) => {
+  const router = useRouter();
+  const categoryName = router.query.category?.toString();
+
+  const title = "Category: " + categoryName;
+
   return (
     <>
+      <Head>
+        <title key="title">{`${title} - NextJS News App`}</title>
+      </Head>
       <main>
+        <h1>{title}</h1>
+        <Alert>
+          This page uses <strong>getServerSideProps</strong> to fetch data server-side on every request. 
+          This alows search engines to crawl the page content and <strong>improves SEO</strong>. 
+        </Alert>
         <NewsArticlesGrid articles={newsArticles} />
       </main>
     </>
