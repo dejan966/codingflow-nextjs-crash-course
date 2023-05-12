@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { NewsArticle, NewsResponse } from "@/models/NewsArticles";
-import NewsArticleEntry from "@/components/NewsAricleEntry";
 import NewsArticlesGrid from "@/components/NewsArticlesGrid";
 import { Alert } from "react-bootstrap";
 
