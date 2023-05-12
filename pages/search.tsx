@@ -11,9 +11,9 @@ const SearchNewsPage = () => {
     useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault(); //prevents the page from refreshing
+    e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    const searchQuery = formData.get("searchQuery")?.toString().trim(); //trim removes white space
+    const searchQuery = formData.get("searchQuery")?.toString().trim();
 
     if (searchQuery) {
       alert(searchQuery);
