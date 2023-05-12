@@ -23,6 +23,7 @@ const NewsArticleEntry = ({
           width={500}
           height={200}
           alt="News article image"
+          className="card-img-top"
         />
         <Card.Body>
           <Card.Title>{title}</Card.Title>
